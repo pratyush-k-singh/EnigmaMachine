@@ -1,0 +1,120 @@
+package com.enigma.components;
+
+import com.enigma.core.EnigmaConfiguration;
+import com.enigma.exception.InvalidConfigurationException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+/**
+ * Represents a single rotor in the Enigma machine.
+ * Each rotor performs character substitution and can rotate to change its mapping.
+ */
+public class Rotor extends EnigmaComponent {
+    private static final Logger logger = LogManager.getLogger(Rotor.class);
+    
+    private int position;
+    private final int startPosition;
+    private final int notchPosition;
+    private boolean shouldAdvanceNext;
+    private static int rotorCounter = 0;
+    
+    public Rotor(long seed, int startPosition, int notchPosition) {
+        super("Rotor-" + (++rotorCounter), seed);
+        this.startPosition = validatePosition(startPosition);
+        this.notchPosition = validatePosition(notchPosition);
+        reset();
+        logWiringTable();
+    }
+    
+    private int validatePosition(int pos) {
+        if (pos < EnigmaConfiguration.MIN_ROTOR_INDEX || 
+            pos > EnigmaConfiguration.MAX_ROTOR_INDEX) {
+            throw new InvalidConfigurationException(String.format(
+                "Invalid rotor position %d. Must be between %d and %d",
+                pos, EnigmaConfiguration.MIN_ROTOR_INDEX, 
+                EnigmaConfiguration.MAX_ROTOR_INDEX));
+        }
+        return pos;
+    }
+    
+    /**
+     * Resets the rotor to its initial position.
+     */
+    public void reset() {
+        position = startPosition;
+        shouldAdvanceNext = false;
+        logger.debug("{}: Reset to starting position {}", getId(), position);
+    }
+    
+    /**
+     * Rotates the rotor one position and checks if the next rotor should advance.
+     */
+    public void rotate() {
+        position = (position + 1) % EnigmaConfiguration.CHARSET_SIZE;
+        shouldAdvanceNext = position == notchPosition;
+        logger.trace("{}: Rotated to position {}. Should advance next: {}", 
+                    getId(), position, shouldAdvanceNext);
+    }
+    
+    public boolean shouldAdvanceNext() {
+        return shouldAdvanceNext;
+    }
+    
+    /**
+     * Transforms a character through the rotor in the forward direction.
+     */
+    @Override
+    public char transform(char c) {
+        if (!isValidCharacter(c)) {
+            return c;
+        }
+        
+        // Shift the character based on current position
+        char shifted = (char) (((c - EnigmaConfiguration.CHARSET_START + position) 
+                               % EnigmaConfiguration.CHARSET_SIZE) 
+                               + EnigmaConfiguration.CHARSET_START);
+        
+        // Transform through the wiring
+        char result = super.transform(shifted);
+        logger.trace("{}: Forward transform {} -> {} -> {}", 
+                    getId(), c, shifted, result);
+        return result;
+    }
+    
+    /**
+     * Transforms a character through the rotor in the reverse direction.
+     */
+    public char transformReverse(char c) {
+        if (!isValidCharacter(c)) {
+            return c;
+        }
+        
+        // Find the reverse mapping
+        char mapped = c;
+        for (var entry : wiring.entrySet()) {
+            if (entry.getValue() == c) {
+                mapped = entry.getKey();
+                break;
+            }
+        }
+        
+        // Reverse the position shift
+        int pos = (mapped - EnigmaConfiguration.CHARSET_START - position);
+        if (pos < 0) {
+            pos += EnigmaConfiguration.CHARSET_SIZE;
+        }
+        char result = (char) (pos + EnigmaConfiguration.CHARSET_START);
+        
+        logger.trace("{}: Reverse transform {} -> {} -> {}", 
+                    getId(), c, mapped, result);
+        return result;
+    }
+    
+    public int getPosition() {
+        return position;
+    }
+    
+    public int getNotchPosition() {
+        return notchPosition;
+    }
+}

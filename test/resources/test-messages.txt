@@ -1,0 +1,27 @@
+# Test messages for Enigma machine
+# Format: Each line contains a test message
+# Lines starting with # are comments
+
+# Simple messages
+Hello, World!
+The quick brown fox jumps over the lazy dog.
+1234567890
+
+# Special characters
+!@#$%^&*()_+-=[]{}|;:,.<>?
+
+# Multiple lines
+This is a multi-line
+test message to ensure
+proper handling of line breaks.
+
+# Unicode characters (within allowed range)
+The following symbols should be handled: ©®™
+
+# Edge cases
+    Leading spaces
+Trailing spaces   
+Multiple   spaces   between   words
+
+# Maximum length test
+This is a very long message that tests the machine's ability to handle longer texts without any issues or memory problems while maintaining consistent encryption and decryption capabilities throughout the entire process.
