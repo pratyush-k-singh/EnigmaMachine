@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:enigmadb
+    username: sa
+    password: password
+    driver-class-name: org.h2.Driver
+  
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+enigma:
+  charset:
+    start: ' '
+    end: '~'
+  rotors:
+    min-rotors: 2
+    max-rotors: 12
+    default-seed: 42
+
+logging:
+  level:
+    com.enigma: DEBUG
+    org.springframework: INFO
+    org.hibernate: INFO

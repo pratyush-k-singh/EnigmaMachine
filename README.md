@@ -1,140 +1,116 @@
+```markdown
 # Modern Enigma Machine Implementation
 
-A modern implementation of the Enigma machine in Java, supporting the full printable ASCII character set. This implementation maintains the core concepts of the original Enigma machine while extending its capabilities for modern use.
+This project is a modern implementation of the Enigma machine using Spring Boot. It provides a REST API for encryption and decryption operations, along with configuration management and persistence.
 
 ## Features
 
-- Support for printable ASCII characters (space through tilde)
-- Configurable number of rotors (2-12)
-- Customizable rotor positions and notch points
-- Deterministic encryption/decryption using seed-based randomization
-- Full logging support
+- Spring Boot-based implementation with configurable rotor system
+- REST API for encryption/decryption operations  
+- Database persistence for machine configurations
 - Comprehensive test suite
-- Thread-safe implementation
+- Monitoring and metrics support
+- Security configuration
 
-## Requirements
+## Prerequisites
 
 - Java 17 or higher
 - Maven 3.6 or higher
+- Git
 
-## Building the Project
+## Building and Running
 
-Clone the repository and build using Maven:
-
+### Build
 ```bash
-git clone https://github.com/yourusername/modern-enigma.git
-cd modern-enigma
+git clone https://github.com/yourusername/enigma.git
+cd enigma
 mvn clean install
 ```
 
-## Usage
+### Run
+```bash
+# Using Maven
+mvn spring-boot:run
 
-### Basic Usage
-
-```java
-import com.enigma.core.EnigmaConfiguration;
-import com.enigma.core.EnigmaMachine;
-
-public class Example {
-    public static void main(String[] args) {
-        // Create a configuration with 3 rotors
-        EnigmaConfiguration config = new EnigmaConfiguration.Builder()
-            .plugboardSeed(123456L)
-            .reflectorSeed(789012L)
-            .addRotor(345678L, 0, 5)  // First rotor: seed, start position, notch position
-            .addRotor(901234L, 0, 10) // Second rotor
-            .addRotor(567890L, 0, 15) // Third rotor
-            .build();
-
-        // Create the machine
-        EnigmaMachine enigma = new EnigmaMachine(config);
-
-        // Encrypt a message
-        String message = "Hello, World!";
-        String encrypted = enigma.encrypt(message);
-        System.out.println("Encrypted: " + encrypted);
-
-        // Reset the machine to initial state
-        enigma.reset();
-
-        // Decrypt the message
-        String decrypted = enigma.decrypt(encrypted);
-        System.out.println("Decrypted: " + decrypted);
-    }
-}
+# Or using the JAR file
+java -jar target/enigma-machine-1.0.0.jar
 ```
 
-### Advanced Configuration
+## API Usage
 
-```java
-// Create a configuration with custom settings
-EnigmaConfiguration config = new EnigmaConfiguration.Builder()
-    .plugboardSeed(System.currentTimeMillis()) // Random seed based on time
-    .reflectorSeed(UUID.randomUUID().getLeastSignificantBits()) // Random seed
-    .addRotor(345678L, 5, 10)  // Custom start and notch positions
-    .addRotor(901234L, 3, 15)
-    .addRotor(567890L, 7, 20)
-    .addRotor(111111L, 2, 25)  // Additional rotor
-    .build();
+### Create Configuration
+```bash
+curl -X POST http://localhost:8080/api/v1/enigma/config \
+  -H "Content-Type: application/json" \
+  -d '{
+    "plugboardSeed": 123456,
+    "reflectorSeed": 789012,
+    "rotorConfigurations": [
+      {"seed": 345678, "startPosition": 0, "notchPosition": 5},
+      {"seed": 901234, "startPosition": 0, "notchPosition": 10}
+    ]
+  }'
 ```
 
-## Configuration Parameters
+### Encrypt Message
+```bash
+curl -X POST http://localhost:8080/api/v1/enigma/encrypt \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "Hello, World!",
+    "configId": 1
+  }'
+```
 
-### Rotor Configuration
-- `seed`: Determines the internal wiring of the rotor
-- `startPosition`: Initial position of the rotor (0-94)
-- `notchPosition`: Position at which the next rotor advances (0-94)
+### Decrypt Message  
+```bash
+curl -X POST http://localhost:8080/api/v1/enigma/decrypt \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "encrypted_text_here",
+    "configId": 1
+  }'
+```
 
-### Machine Configuration
-- `plugboardSeed`: Determines the plugboard wiring
-- `reflectorSeed`: Determines the reflector wiring
-- Number of rotors: Minimum 2, Maximum 12
+## Configuration
 
-## Security Considerations
+The application can be configured via `application.yml`:
 
-This implementation:
-- Uses deterministic randomization for reproducibility
-- Supports a larger character set than the original
-- Maintains the reciprocal nature of the original Enigma
-- Is NOT intended for actual cryptographic security
+```yaml
+enigma:
+  charset:
+    start: ' '  # Space character
+    end: '~'    # Tilde character
+  rotors:
+    min-rotors: 2
+    max-rotors: 12
+    default-seed: 42
+```
 
 ## Testing
 
-Run the test suite using Maven:
-
 ```bash
+# Run unit tests
 mvn test
+
+# Run integration tests 
+mvn verify
 ```
 
-View test coverage report:
+## Monitoring
 
-```bash
-mvn jacoco:report
-```
+The application exposes metrics at `/actuator/metrics`, including:
+- `enigma.operations` - Encryption/decryption operation counts
+- `enigma.errors` - Error counts
 
-The coverage report will be available at `target/site/jacoco/index.html`
+## Development Tools
 
-## Logging
-
-Logging is configured in `src/main/resources/log4j2.xml`. By default:
-- INFO and above messages go to console
-- DEBUG and above messages go to `logs/enigma.log`
-- File logging uses rotation (10MB max file size)
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -am 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Create a Pull Request
+- H2 Database Console: http://localhost:8080/h2-console
+  - JDBC URL: jdbc:h2:mem:enigmadb
+  - Username: sa
+  - Password: password
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- Based on the original Enigma machine design
-- Uses modern Java features and best practices
-- Inspired by various open-source Enigma implementations
+```
