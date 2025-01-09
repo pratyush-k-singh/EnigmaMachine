@@ -1,12 +1,6 @@
-Your project documentation is well-structured and clearly formatted. Here’s the revised version with improved formatting and minor adjustments for clarity and consistency:
-
----
-
 # Modern Enigma Machine Implementation
 
 This project is a modern implementation of the Enigma machine using Spring Boot. It provides a REST API for encryption and decryption operations, along with configuration management and persistence.
-
----
 
 ## Features
 
@@ -17,15 +11,11 @@ This project is a modern implementation of the Enigma machine using Spring Boot.
 - **Monitoring and metrics support** for application performance  
 - **Security configuration** for secure operations  
 
----
-
 ## Prerequisites
 
 - **Java** 17 or higher  
 - **Maven** 3.6 or higher  
 - **Git**
-
----
 
 ## Building and Running
 
@@ -44,8 +34,6 @@ mvn spring-boot:run
 # Or using the JAR file
 java -jar target/enigma-machine-1.0.0.jar
 ```
-
----
 
 ## API Usage
 
@@ -83,8 +71,6 @@ curl -X POST http://localhost:8080/api/v1/enigma/decrypt \
   }'
 ```
 
----
-
 ## Configuration
 
 The application can be configured via `application.yml`:
@@ -100,8 +86,6 @@ enigma:
     default-seed: 42
 ```
 
----
-
 ## Testing
 
 ```bash
@@ -112,8 +96,6 @@ mvn test
 mvn verify
 ```
 
----
-
 ## Monitoring
 
 The application exposes metrics at `/actuator/metrics`, including:
@@ -121,16 +103,12 @@ The application exposes metrics at `/actuator/metrics`, including:
 - `enigma.operations` - Encryption/decryption operation counts  
 - `enigma.errors` - Error counts  
 
----
-
 ## Development Tools
 
 - **H2 Database Console**: http://localhost:8080/h2-console  
   - JDBC URL: `jdbc:h2:mem:enigmadb`  
   - Username: `sa`  
   - Password: `password`
-
----
 
 ## License
 
