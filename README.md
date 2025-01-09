@@ -1,22 +1,31 @@
-```markdown
+Your project documentation is well-structured and clearly formatted. Here’s the revised version with improved formatting and minor adjustments for clarity and consistency:
+
+---
+
 # Modern Enigma Machine Implementation
 
 This project is a modern implementation of the Enigma machine using Spring Boot. It provides a REST API for encryption and decryption operations, along with configuration management and persistence.
 
+---
+
 ## Features
 
-- Spring Boot-based implementation with configurable rotor system
-- REST API for encryption/decryption operations  
-- Database persistence for machine configurations
-- Comprehensive test suite
-- Monitoring and metrics support
-- Security configuration
+- **Spring Boot-based implementation** with a configurable rotor system  
+- **REST API** for encryption/decryption operations  
+- **Database persistence** for machine configurations  
+- **Comprehensive test suite** for unit and integration testing  
+- **Monitoring and metrics support** for application performance  
+- **Security configuration** for secure operations  
+
+---
 
 ## Prerequisites
 
-- Java 17 or higher
-- Maven 3.6 or higher
-- Git
+- **Java** 17 or higher  
+- **Maven** 3.6 or higher  
+- **Git**
+
+---
 
 ## Building and Running
 
@@ -35,6 +44,8 @@ mvn spring-boot:run
 # Or using the JAR file
 java -jar target/enigma-machine-1.0.0.jar
 ```
+
+---
 
 ## API Usage
 
@@ -62,7 +73,7 @@ curl -X POST http://localhost:8080/api/v1/enigma/encrypt \
   }'
 ```
 
-### Decrypt Message  
+### Decrypt Message
 ```bash
 curl -X POST http://localhost:8080/api/v1/enigma/decrypt \
   -H "Content-Type: application/json" \
@@ -71,6 +82,8 @@ curl -X POST http://localhost:8080/api/v1/enigma/decrypt \
     "configId": 1
   }'
 ```
+
+---
 
 ## Configuration
 
@@ -87,30 +100,38 @@ enigma:
     default-seed: 42
 ```
 
+---
+
 ## Testing
 
 ```bash
 # Run unit tests
 mvn test
 
-# Run integration tests 
+# Run integration tests
 mvn verify
 ```
+
+---
 
 ## Monitoring
 
 The application exposes metrics at `/actuator/metrics`, including:
-- `enigma.operations` - Encryption/decryption operation counts
-- `enigma.errors` - Error counts
+
+- `enigma.operations` - Encryption/decryption operation counts  
+- `enigma.errors` - Error counts  
+
+---
 
 ## Development Tools
 
-- H2 Database Console: http://localhost:8080/h2-console
-  - JDBC URL: jdbc:h2:mem:enigmadb
-  - Username: sa
-  - Password: password
+- **H2 Database Console**: http://localhost:8080/h2-console  
+  - JDBC URL: `jdbc:h2:mem:enigmadb`  
+  - Username: `sa`  
+  - Password: `password`
+
+---
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-```
+This project is licensed under the MIT License. See the `LICENSE` file for details.
